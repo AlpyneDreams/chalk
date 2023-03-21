@@ -2,6 +2,7 @@
 
 #include <string>
 #include <string_view>
+#include <iostream>
 
 #define DEFINE_UDL(name, Type) \
     inline constexpr auto operator"" name(const char* str, size_t size) { \
@@ -40,6 +41,11 @@ namespace chalk
                 result.value[N + i] = other.value[i];
             return result;
         }
+
+        constexpr friend std::ostream& operator <<(std::ostream& os, const FixedString& fmt) {
+            return os << std::string_view(fmt);
+        }
+
     };
 
     FixedString() -> FixedString<0>;
@@ -83,6 +89,14 @@ namespace chalk
             result += Prefix;
             result += str;
             return result;
+        }
+
+        constexpr friend std::ostream& operator <<(std::ostream& os, const Delimiter& fmt) {
+            return os << Prefix;
+        }
+
+        constexpr Delimiter<Suffix, ""> operator !(void) const {
+            return {};
         }
     };
 
